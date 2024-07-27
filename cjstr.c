@@ -2,20 +2,24 @@
 
 cjstr_t cjstr_create(wchar_t *initializer, uint64_t length)
 {
-    cjstr_t str = malloc((length + 1) * sizeof(cjstr_t));
+    cjstr_t str = malloc(
+        sizeof(cjstr_struct_t) + length * sizeof(cjstr_char_t)
+    );
 
     if (str == NULL)
     {
         return NULL;
     }
 
+    str->length = length;
+
     if (initializer == NULL)
     {
-        wmemset(str, 0, length);
+        wmemset(str->data, 0, length);
     }
     else
     {
-        wmemcpy(str, initializer, length);
+        wmemcpy(str->data, initializer, length);
     }
 
     return str;
@@ -28,14 +32,13 @@ void cjstr_destroy(cjstr_t str)
 
 uint16_t cjstr_char_code_at(cjstr_t str, uint64_t pos)
 {
-    return (uint16_t) *(str + pos);
+    return (uint16_t) *(str->data + pos);
 }
 
 cjstr_t cjstr_from_char_code(int16_t *code_units, uint64_t length)
 {
-    cjstr_t
-        str = cjstr_create(NULL, length),
-        str_cur = str;
+    cjstr_t str = cjstr_create(NULL, length);
+    cjstr_char_t *str_cur = str->data;
 
     if (str_cur == NULL)
     {
@@ -50,4 +53,21 @@ cjstr_t cjstr_from_char_code(int16_t *code_units, uint64_t length)
     }
 
     return str;
+}
+
+uint64_t cjstr_length(cjstr_t str)
+{
+    return str->length;
+}
+
+cjstr_t cjstr_at(cjstr_t str, int64_t pos)
+{
+    if (pos < -str->length || pos >= str->length)
+    {
+        return NULL;
+    }
+
+    uint64_t rel_pos = pos < 0 ? str->length - pos : pos;
+
+    return cjstr_create(str->data + rel_pos, 1);
 }
