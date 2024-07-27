@@ -27,4 +27,6 @@ uint64_t cjstr_length(cjstr_t str);
 
 cjstr_t cjstr_at(cjstr_t str, int64_t pos);
 
+cjstr_t cjstr_concat(cjstr_t str, cjstr_t *strs, uint64_t length);
+
 #endif //CJSTR_LIBRARY_H

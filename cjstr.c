@@ -71,3 +71,41 @@ cjstr_t cjstr_at(cjstr_t str, int64_t pos)
 
     return cjstr_create(str->data + rel_pos, 1);
 }
+
+cjstr_t cjstr_concat(cjstr_t str, cjstr_t *strs, uint64_t length)
+{
+    uint64_t
+        out_length = str->length,
+        i = 0;
+
+    cjstr_t *strs_cur = strs;
+
+    while (i < length)
+    {
+        out_length += (*strs_cur)->length;
+        strs_cur++;
+        i++;
+    }
+
+    cjstr_t out_str = cjstr_create(NULL, out_length);
+
+    if (out_str == NULL)
+    {
+        return NULL;
+    }
+
+    cjstr_char_t *out_ptr = out_str->data;
+
+    i = 0;
+    strs_cur = strs;
+
+    while (i < length)
+    {
+        cjstr_t strs_cur_str = *strs_cur;
+        wmemmove(out_ptr, strs_cur_str->data, strs_cur_str->length);
+        strs_cur++;
+        i++;
+    }
+
+    return out_str;
+}
