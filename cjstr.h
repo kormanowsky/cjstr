@@ -15,18 +15,27 @@ typedef struct cjstr_struct
 
 typedef cjstr_struct_t *cjstr_t;
 
-cjstr_t cjstr_create(wchar_t *initializer, uint64_t length);
+// "Constructor" / "destructor"
 
-void cjstr_destroy(cjstr_t str);
+cjstr_t cjstr_create(uint64_t length);
 
-uint16_t cjstr_char_code_at(cjstr_t str, uint64_t pos);
+void cjstr_destroy(cjstr_t this);
+
+// "Instance methods"
+wchar_t *cjstr_to_wchar_ptr(cjstr_t this);
+
+uint16_t cjstr_char_code_at(cjstr_t this, uint64_t pos);
+
+uint64_t cjstr_length(cjstr_t this);
+
+cjstr_t cjstr_at(cjstr_t this, int64_t pos);
+
+cjstr_t cjstr_concat(cjstr_t this, cjstr_t *strs, uint64_t length);
+
+// "Static methods"
+
+cjstr_t cjstr_from_wchar_ptr(wchar_t *ptr);
 
 cjstr_t cjstr_from_char_code(int16_t *code_units, uint64_t length);
-
-uint64_t cjstr_length(cjstr_t str);
-
-cjstr_t cjstr_at(cjstr_t str, int64_t pos);
-
-cjstr_t cjstr_concat(cjstr_t str, cjstr_t *strs, uint64_t length);
 
 #endif //CJSTR_LIBRARY_H
