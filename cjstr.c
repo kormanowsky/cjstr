@@ -22,6 +22,8 @@ cjstr_t cjstr_create(wchar_t *initializer, uint64_t length)
         wmemcpy(str->data, initializer, length);
     }
 
+    wmemset(str->data + str->length, L'\0', 1);
+
     return str;
 }
 
@@ -94,7 +96,9 @@ cjstr_t cjstr_concat(cjstr_t str, cjstr_t *strs, uint64_t length)
         return NULL;
     }
 
-    cjstr_char_t *out_ptr = out_str->data;
+    wmemmove(out_str->data, str->data, str->length);
+
+    cjstr_char_t *out_ptr = out_str->data + str->length;
 
     i = 0;
     strs_cur = strs;
@@ -102,10 +106,15 @@ cjstr_t cjstr_concat(cjstr_t str, cjstr_t *strs, uint64_t length)
     while (i < length)
     {
         cjstr_t strs_cur_str = *strs_cur;
+
         wmemmove(out_ptr, strs_cur_str->data, strs_cur_str->length);
+
+        out_ptr += strs_cur_str->length;
         strs_cur++;
         i++;
     }
+
+    wmemset(out_ptr, L'\0', 1);
 
     return out_str;
 }
