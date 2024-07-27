@@ -1,0 +1,5 @@
+# cjstr
+
+A fun project to implement ES2023 String in C23.
+
+ES2023 standard: https://tc39.es/ecma262/2023/#sec-text-processing
