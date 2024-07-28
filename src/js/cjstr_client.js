@@ -1,4 +1,4 @@
-const factory = require('./cjstr.js');
+const factory = require('../c_js/cjstr.js');
 
 const cjstr = factory();
 
