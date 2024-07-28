@@ -1,1 +1,3 @@
 cmake-build-*/
+cjstr.js
+*.wasm
