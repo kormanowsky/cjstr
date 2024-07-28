@@ -1,4 +1,3 @@
-const fs = require('node:fs');
 const cjstrFactory = require('./cjstr.js');
 
 async function main(cjstr) {
@@ -12,7 +11,12 @@ async function main(cjstr) {
         }
 
         concat(...strs) {
-            const ptr = cjstr._malloc(strs.length);
+            const stackPtr = cjstr.stackSave();
+
+            const ptr = cjstr.stackAlloc(strs.length * cjstr.POINTER_SIZE);
+
+            cjstr.stackRestore(stackPtr);
+
             let ptrCpy = ptr;
 
             for (let i = 0; i < strs.length; ++i) {
@@ -21,11 +25,7 @@ async function main(cjstr) {
                 ptrCpy += cjstr.POINTER_SIZE;
             }
 
-            const out = new CJSStr(cjstr._cjstr_concat(this.ptr, ptr, strs.length));
-
-            cjstr._free(ptr);
-
-            return out;
+            return new CJSStr(cjstr._cjstr_concat(this.ptr, ptr, strs.length));
         }
 
         getPtr() {
@@ -34,6 +34,10 @@ async function main(cjstr) {
 
         toString() {
             return cjstr.UTF32ToString(cjstr._cjstr_to_wchar_ptr(this.ptr));
+        }
+
+        destroy() {
+            cjstr._cjstr_destroy(this.ptr);
         }
 
         static fromString(str) {
@@ -46,11 +50,6 @@ async function main(cjstr) {
             return new CJSStr(ptr);
         }
     }
-
-    const s = [CJSStr.fromString("Test!"), CJSStr.fromString("Test2!"), CJSStr.fromString("Test3!")];
-    console.log(s[0].length, s[1].length, s[2].length);
-    console.log(s[2].toString());
-    console.log(s[2].concat(s[1]).concat(s[0], s[2]).toString());
 }
 
 cjstrFactory().then(main);

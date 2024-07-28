@@ -1,6 +1,6 @@
 #include "cjstr.h"
 
-cjstr_t cjstr_create(uint64_t length)
+cjstr_t cjstr_create(size_t length)
 {
     cjstr_t str = malloc(
         sizeof(cjstr_struct_t) + length * sizeof(cjstr_char_t)
@@ -23,19 +23,19 @@ void cjstr_destroy(cjstr_t this)
     free(this);
 }
 
-uint64_t cjstr_length(cjstr_t this)
+size_t cjstr_length(cjstr_t this)
 {
     return this->length;
 }
 
-cjstr_t cjstr_at(cjstr_t this, int64_t pos)
+cjstr_t cjstr_at(cjstr_t this, ssize_t pos)
 {
     if (pos < -this->length || pos >= this->length)
     {
         return NULL;
     }
 
-    uint64_t rel_pos = pos < 0 ? this->length - pos : pos;
+    size_t rel_pos = pos < 0 ? this->length - pos : pos;
 
     cjstr_t out_str = cjstr_create(1);
 
@@ -44,9 +44,9 @@ cjstr_t cjstr_at(cjstr_t this, int64_t pos)
     return out_str;
 }
 
-cjstr_t cjstr_concat(cjstr_t this, cjstr_t *strs, uint64_t length)
+cjstr_t cjstr_concat(cjstr_t this, cjstr_t *strs, size_t length)
 {
-    uint64_t
+    size_t
         out_length = this->length,
         i = 0;
 
@@ -92,7 +92,7 @@ wchar_t *cjstr_to_wchar_ptr(cjstr_t this)
     return this->data;
 }
 
-uint16_t cjstr_char_code_at(cjstr_t this, uint64_t pos)
+uint16_t cjstr_char_code_at(cjstr_t this, size_t pos)
 {
     return (uint16_t) *(this->data + pos);
 }
@@ -104,7 +104,7 @@ cjstr_t cjstr_from_wchar_ptr(wchar_t *ptr)
         return NULL;
     }
 
-    uint64_t length = 0;
+    size_t length = 0;
     wchar_t *ptr_cur = ptr;
 
     while (*ptr_cur != L'\0')
@@ -127,7 +127,7 @@ cjstr_t cjstr_from_wchar_ptr(wchar_t *ptr)
     return str;
 }
 
-cjstr_t cjstr_from_char_code(int16_t *code_units, uint64_t length)
+cjstr_t cjstr_from_char_code(int16_t *code_units, size_t length)
 {
     cjstr_t str = cjstr_create(length);
 
