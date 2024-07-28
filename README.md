@@ -1,4 +1,4 @@
-# cjstr_client
+# CJStr
 
 A fun project to implement ES2023 String in C23.
 
