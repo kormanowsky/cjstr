@@ -1,8 +1,6 @@
-const factory = require('../c_js/cjstr.js');
+const cjstr = require('../c_js');
 
-const cjstr = factory();
-
-class CJSStr {
+module.exports = class CJSStr {
     constructor(ptr) {
         this.ptr = ptr;
     }
@@ -51,7 +49,3 @@ class CJSStr {
         return new CJSStr(ptr);
     }
 }
-
-const s = CJSStr.fromString("test");
-
-console.log(s.toString());
